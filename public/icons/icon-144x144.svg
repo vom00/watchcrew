@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="144" height="144" viewBox="0 0 144 144">
+  <rect width="144" height="144" rx="22" fill="#06060B"/>
+  <rect x="7" y="7" width="130" height="130" rx="17" fill="none" stroke="#00F0FF" stroke-width="3" opacity="0.3"/>
+  <text x="50%" y="42%" text-anchor="middle" dominant-baseline="central" fill="#00F0FF" font-family="system-ui, sans-serif" font-weight="800" font-size="40px">WC</text>
+  <text x="50%" y="68%" text-anchor="middle" dominant-baseline="central" fill="#ECEEF5" font-family="system-ui, sans-serif" font-weight="600" font-size="17px" opacity="0.7">CREW</text>
+</svg>

@@ -1,0 +1,96 @@
+{
+  "name": "watchcrew",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Track anime episodes, earn XP, unlock achievements, and compete with friends.",
+  "author": "WatchCrew",
+  "main": "electron/main.js",
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "next lint",
+    "electron:dev": "concurrently \"next dev\" \"wait-on http://localhost:3000 && electron .\"",
+    "electron:build": "next build && electron-builder",
+    "electron:pack": "next build && electron-builder --dir"
+  },
+  "build": {
+    "appId": "com.watchcrew.app",
+    "productName": "WatchCrew",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "icon": "public/images/icon-512.png",
+    "asar": false,
+    "files": [
+      "electron/**/*",
+      ".next/standalone/**/*",
+      ".next/static/**/*",
+      "public/**/*",
+      "package.json",
+      "next.config.js",
+      ".env.local"
+    ],
+    "extraResources": [
+      {
+        "from": "public/images/icon-512.png",
+        "to": "icon.png"
+      }
+    ],
+    "win": {
+      "target": [
+        "nsis"
+      ],
+      "icon": "public/images/icon-512.png",
+      "signAndEditExecutable": false
+    },
+    "mac": {
+      "target": [
+        "dmg"
+      ],
+      "category": "public.app-category.entertainment",
+      "icon": "public/images/icon-512.png"
+    },
+    "linux": {
+      "target": [
+        "AppImage"
+      ],
+      "category": "Entertainment",
+      "icon": "public/images/icon-512.png"
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "perMachine": false,
+      "createDesktopShortcut": true,
+      "createStartMenuShortcut": true,
+      "shortcutName": "WatchCrew"
+    }
+  },
+  "dependencies": {
+    "clsx": "^2.1.0",
+    "lucide-react": "^0.370.0",
+    "next": "^14.2.0",
+    "next-auth": "^4.24.13",
+    "react": "^18.3.0",
+    "react-dom": "^18.3.0",
+    "tailwind-merge": "^2.2.0",
+    "zustand": "^4.5.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.12.0",
+    "@types/react": "^18.3.0",
+    "@types/react-dom": "^18.3.0",
+    "autoprefixer": "^10.4.0",
+    "concurrently": "^9.2.1",
+    "electron": "^41.0.3",
+    "electron-builder": "^26.8.1",
+    "eslint": "^8.57.0",
+    "eslint-config-next": "^14.2.0",
+    "postcss": "^8.4.0",
+    "rcedit": "^5.0.2",
+    "tailwindcss": "^3.4.0",
+    "typescript": "^5.4.0",
+    "wait-on": "^9.0.4"
+  }
+}
