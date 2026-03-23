@@ -16,8 +16,8 @@ const isDev = !app.isPackaged;
 // ---------------------------------------------------------------------------
 function getAppRoot() {
   if (isDev) return path.join(__dirname, '..');
-  // In production with asar, unpacked files are in app.asar.unpacked
-  return path.join(__dirname, '..').replace('app.asar', 'app.asar.unpacked');
+  // In production without asar, files are directly in resources/app
+  return path.join(__dirname, '..');
 }
 
 function loadEnvFile() {
