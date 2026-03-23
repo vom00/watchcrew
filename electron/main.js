@@ -1,4 +1,5 @@
-const { app, BrowserWindow, shell } = require('electron');
+const { app, BrowserWindow, shell, dialog } = require('electron');
+const { autoUpdater } = require('electron-updater');
 const path = require('path');
 const fs = require('fs');
 const { fork } = require('child_process');
@@ -289,6 +290,44 @@ app.whenReady().then(async () => {
   try {
     await startNextServer();
     createWindow();
+
+    // Check for updates after window is shown (only in production)
+    if (!isDev) {
+      autoUpdater.autoDownload = false;
+      autoUpdater.checkForUpdates().catch(() => {});
+
+      autoUpdater.on('update-available', (info) => {
+        dialog
+          .showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'Update Available',
+            message: `WatchCrew v${info.version} is available. Download now?`,
+            buttons: ['Download', 'Later'],
+            defaultId: 0,
+          })
+          .then(({ response }) => {
+            if (response === 0) {
+              autoUpdater.downloadUpdate();
+            }
+          });
+      });
+
+      autoUpdater.on('update-downloaded', () => {
+        dialog
+          .showMessageBox(mainWindow, {
+            type: 'info',
+            title: 'Update Ready',
+            message: 'Update downloaded. WatchCrew will restart to install it.',
+            buttons: ['Restart Now', 'Later'],
+            defaultId: 0,
+          })
+          .then(({ response }) => {
+            if (response === 0) {
+              autoUpdater.quitAndInstall();
+            }
+          });
+      });
+    }
   } catch (err) {
     console.error('[WatchCrew] Fatal error:', err);
     if (splashWindow && !splashWindow.isDestroyed()) {
