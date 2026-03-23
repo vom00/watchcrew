@@ -115,7 +115,6 @@ export default function FriendsPage() {
   const hydrated = useUserStore((s) => s.hydrated);
   const loadUser = useUserStore((s) => s.loadFromStorage);
   const friends = useSocialStore((s) => s.friends);
-  const seedDemoData = useSocialStore((s) => s.seedDemoData);
   const sendFriendRequest = useSocialStore((s) => s.sendFriendRequest);
   const acceptFriendRequest = useSocialStore((s) => s.acceptFriendRequest);
   const removeFriend = useSocialStore((s) => s.removeFriend);
@@ -137,12 +136,7 @@ export default function FriendsPage() {
     }
   }, [hydrated, isLoggedIn, router]);
 
-  // Seed demo data on mount if friends list is empty
-  useEffect(() => {
-    if (friends.length === 0) {
-      seedDemoData();
-    }
-  }, []);
+  // No demo data seeding — start clean for new users
 
   // ---------------------------------------------------------------------------
   // Derived data

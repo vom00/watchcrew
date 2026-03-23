@@ -119,9 +119,6 @@ export default function ExplorePage() {
   // ---------------------------------------------------------------------------
 
   const handleCardClick = (series: AnimeSeries) => {
-    if (!progress[series.id]) {
-      startSeries(series.id);
-    }
     router.push(`/library/${series.slug}`);
   };
 

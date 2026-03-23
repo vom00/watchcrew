@@ -13,8 +13,14 @@ const isDev = !app.isPackaged;
 // ---------------------------------------------------------------------------
 // Load .env.local into process.env
 // ---------------------------------------------------------------------------
+function getAppRoot() {
+  if (isDev) return path.join(__dirname, '..');
+  // In production with asar, unpacked files are in app.asar.unpacked
+  return path.join(__dirname, '..').replace('app.asar', 'app.asar.unpacked');
+}
+
 function loadEnvFile() {
-  const appRoot = path.join(__dirname, '..');
+  const appRoot = getAppRoot();
   const envPath = path.join(appRoot, '.env.local');
 
   if (fs.existsSync(envPath)) {
@@ -121,7 +127,7 @@ function createSplashWindow() {
 // Main Window
 // ---------------------------------------------------------------------------
 function createWindow() {
-  const iconPath = path.join(__dirname, '..', 'public', 'images', 'icon-512.png');
+  const iconPath = path.join(getAppRoot(), 'public', 'images', 'icon-512.png');
 
   mainWindow = new BrowserWindow({
     width: 1280,
@@ -224,8 +230,8 @@ function startNextServer() {
     }
 
     // Production: run the standalone server.js
-    // With asar: false, files are directly in resources/app/
-    const appRoot = path.join(__dirname, '..');
+    // With asar, unpacked files are in app.asar.unpacked
+    const appRoot = getAppRoot();
     const serverScript = path.join(appRoot, '.next', 'standalone', 'server.js');
 
     console.log('[WatchCrew] Starting Next.js server...');

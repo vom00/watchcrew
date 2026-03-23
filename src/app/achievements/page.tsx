@@ -91,7 +91,7 @@ export default function AchievementsPage() {
   const router = useRouter();
   const { user, isLoggedIn, hydrated, loadFromStorage: loadUser } = useUserStore();
   const { getAllProgress, episodeLogs, loadFromStorage: loadProgress } = useProgressStore();
-  const { friends, loadFromStorage: loadSocial, seedDemoData } = useSocialStore();
+  const { friends, loadFromStorage: loadSocial } = useSocialStore();
 
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
 
@@ -102,12 +102,7 @@ export default function AchievementsPage() {
     loadSocial();
   }, [loadUser, loadProgress, loadSocial]);
 
-  // Seed demo social data if empty
-  useEffect(() => {
-    if (friends.length === 0) {
-      seedDemoData();
-    }
-  }, [friends.length, seedDemoData]);
+  // No demo data seeding — start clean for new users
 
   // Redirect if not logged in
   useEffect(() => {

@@ -21,7 +21,12 @@
       "output": "dist-electron"
     },
     "icon": "public/images/icon-512.png",
-    "asar": false,
+    "asar": true,
+    "asarUnpack": [
+      ".next/standalone/**/*",
+      "public/**/*",
+      ".env.local"
+    ],
     "files": [
       "electron/**/*",
       ".next/standalone/**/*",

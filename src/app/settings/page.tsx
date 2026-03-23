@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useCallback } from 'react';
 import { useRouter } from 'next/navigation';
+import { signOut } from 'next-auth/react';
 import { useUserStore } from '@/lib/stores';
 import {
   Settings,
@@ -320,12 +321,16 @@ export default function SettingsPage() {
 
   const handleLogout = () => {
     logout();
-    router.push('/');
+    signOut({ callbackUrl: '/' }).catch(() => {
+      router.push('/');
+    });
   };
 
   const handleDeleteAccount = () => {
     logout();
-    router.push('/');
+    signOut({ callbackUrl: '/' }).catch(() => {
+      router.push('/');
+    });
   };
 
   // ---------------------------------------------------------------------------

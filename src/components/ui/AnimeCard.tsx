@@ -13,14 +13,34 @@ interface AnimeCardProps {
   onClick?: () => void;
 }
 
-// Poster images that need custom positioning (portrait posters cropped into landscape cards)
+// Shows that need the image shifted down to show characters properly
 const POSTER_POSITION: Record<string, string> = {
-  'one-piece': 'object-center',
-  'naruto': 'object-center',
-  'naruto-shippuden': 'object-center',
-  'bleach': 'object-center',
-  'black-clover': 'object-center',
-  'attack-on-titan': 'object-center',
+  'death-note': 'object-[25%]',
+  'berserk': 'object-[25%]',
+  'spirited-away': 'object-[25%]',
+  'my-neighbor-totoro': 'object-[25%]',
+  'princess-mononoke': 'object-[25%]',
+  'howls-moving-castle': 'object-[25%]',
+  'your-name': 'object-[25%]',
+  'a-silent-voice': 'object-[25%]',
+  'i-want-to-eat-your-pancreas': 'object-[25%]',
+  'weathering-with-you': 'object-[25%]',
+  'garden-of-words': 'object-[25%]',
+  'blue-lock': 'object-[25%]',
+  'assassination-classroom': 'object-[25%]',
+  'samurai-champloo': 'object-[25%]',
+  'vinland-saga': 'object-[25%]',
+  'soul-eater': 'object-[25%]',
+  'dr-stone': 'object-[25%]',
+  'fullmetal-alchemist-brotherhood': 'object-[25%]',
+  're-zero': 'object-[25%]',
+  'monster': 'object-[25%]',
+  'attack-on-titan': 'object-[25%]',
+  'bleach': 'object-[25%]',
+  'naruto-shippuden': 'object-[25%]',
+  'one-piece': 'object-[25%]',
+  'naruto': 'object-[25%]',
+  'black-clover': 'object-[25%]',
 };
 
 const statusConfig: Record<WatchStatus, { label: string; variant: 'orange' | 'green' | 'blue' | 'gold' | 'purple' | 'red'; icon: React.ReactNode }> = {

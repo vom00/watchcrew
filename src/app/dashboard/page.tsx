@@ -209,7 +209,6 @@ export default function DashboardPage() {
     progress,
     loadFromStorage: loadProgress,
     setProgress,
-    startSeries,
     getAllProgress,
     getTotalEpisodesWatched,
     getCompletedCount,
@@ -218,7 +217,6 @@ export default function DashboardPage() {
     activityFeed,
     friends,
     loadFromStorage: loadSocial,
-    seedDemoData,
     addReaction,
     addComment,
   } = useSocialStore();
@@ -233,22 +231,7 @@ export default function DashboardPage() {
     loadSocial();
   }, []);
 
-  useEffect(() => {
-    if (!isLoggedIn) return;
-    if (activityFeed.length === 0 && friends.length === 0) {
-      seedDemoData();
-    }
-    const allProg = getAllProgress();
-    if (allProg.length === 0) {
-      const demoSeries = ['one-piece', 'naruto-shippuden', 'bleach'];
-      demoSeries.forEach((id) => startSeries(id));
-      setTimeout(() => {
-        setProgress('one-piece', 125);
-        setProgress('naruto-shippuden', 80);
-        setProgress('bleach', 45);
-      }, 100);
-    }
-  }, [isLoggedIn]);
+  // No demo data seeding — start clean for new users
 
   useEffect(() => {
     if (hydrated && !isLoggedIn) {
