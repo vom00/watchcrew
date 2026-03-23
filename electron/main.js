@@ -22,7 +22,10 @@ function getAppRoot() {
 
 function loadEnvFile() {
   const appRoot = getAppRoot();
-  const envPath = path.join(appRoot, '.env.local');
+  // Check both app root and standalone dir for .env.local
+  const envPath = fs.existsSync(path.join(appRoot, '.env.local'))
+    ? path.join(appRoot, '.env.local')
+    : path.join(appRoot, '.next', 'standalone', '.env.local');
 
   if (fs.existsSync(envPath)) {
     const content = fs.readFileSync(envPath, 'utf-8');
@@ -233,16 +236,17 @@ function startNextServer() {
     // Production: run the standalone server.js
     // With asar, unpacked files are in app.asar.unpacked
     const appRoot = getAppRoot();
-    const serverScript = path.join(appRoot, '.next', 'standalone', 'server.js');
+    const standaloneDir = path.join(appRoot, '.next', 'standalone');
+    const serverScript = path.join(standaloneDir, 'server.js');
 
     console.log('[WatchCrew] Starting Next.js server...');
     console.log('[WatchCrew] Server script:', serverScript);
-    console.log('[WatchCrew] App root:', appRoot);
+    console.log('[WatchCrew] Standalone dir:', standaloneDir);
 
     // Use fork() which spawns a new Node.js process
-    // Electron's Node.js runtime will be used automatically
+    // cwd must be the standalone dir where public/ and .next/static/ live
     serverProcess = fork(serverScript, [], {
-      cwd: appRoot,
+      cwd: standaloneDir,
       env: {
         ...process.env,
         NODE_ENV: 'production',
