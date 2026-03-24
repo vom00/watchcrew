@@ -2,6 +2,7 @@
 
 import { useState, useEffect, useRef } from 'react';
 import { useRouter } from 'next/navigation';
+import Link from 'next/link';
 import { signIn } from 'next-auth/react';
 import { useUserStore } from '@/lib/stores';
 import {
@@ -738,13 +739,13 @@ export default function LoginPage() {
         {/* Legal */}
         <p className="text-center text-xs text-[rgba(200,202,216,0.55)] mt-6">
           By continuing, you agree to our{' '}
-          <a href="/terms" className="text-[rgba(200,202,216,0.5)] hover:text-[#00F0FF]">
+          <Link href="/terms" className="text-[rgba(200,202,216,0.5)] hover:text-[#00F0FF]">
             Terms of Service
-          </a>{' '}
+          </Link>{' '}
           and{' '}
-          <a href="/privacy" className="text-[rgba(200,202,216,0.5)] hover:text-[#00F0FF]">
+          <Link href="/privacy" className="text-[rgba(200,202,216,0.5)] hover:text-[#00F0FF]">
             Privacy Policy
-          </a>
+          </Link>
         </p>
       </div>
     </div>

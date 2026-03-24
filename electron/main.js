@@ -185,12 +185,31 @@ function createWindow() {
 
   mainWindow.loadURL(`http://localhost:${PORT}`);
 
-  mainWindow.webContents.on('did-fail-load', () => {
+  mainWindow.webContents.on('did-fail-load', (_event, errorCode, _errorDesc, validatedURL) => {
+    console.log(`[WatchCrew] Page failed to load: ${validatedURL} (code ${errorCode})`);
     setTimeout(() => {
       if (mainWindow && !mainWindow.isDestroyed()) {
         mainWindow.loadURL(`http://localhost:${PORT}`);
       }
     }, 2000);
+  });
+
+  // Auto-recover if a page loads without styles (broken state)
+  mainWindow.webContents.on('did-finish-load', () => {
+    if (mainWindow && !mainWindow.isDestroyed()) {
+      mainWindow.webContents.executeJavaScript(`
+        (function() {
+          // Check if CSS loaded by looking for styled elements
+          var body = document.body;
+          var bg = window.getComputedStyle(body).backgroundColor;
+          // If body has default white/transparent background, CSS didn't load
+          if (bg === 'rgba(0, 0, 0, 0)' || bg === 'rgb(255, 255, 255)') {
+            console.log('[WatchCrew] Detected unstyled page, reloading...');
+            setTimeout(function() { window.location.reload(); }, 1000);
+          }
+        })();
+      `).catch(() => {});
+    }
   });
 
   mainWindow.on('closed', () => {
