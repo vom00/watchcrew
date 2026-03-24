@@ -1,6 +1,6 @@
 {
   "name": "watchcrew",
-  "version": "1.3.0",
+  "version": "1.4.0",
   "private": true,
   "description": "Track anime episodes, earn XP, unlock achievements, and compete with friends.",
   "author": "WatchCrew",
@@ -28,7 +28,10 @@
       }
     ],
     "icon": "public/images/icon-512.png",
-    "asar": false,
+    "asar": true,
+    "asarUnpack": [
+      ".next/standalone/**/*"
+    ],
     "files": [
       "electron/**/*",
       ".next/standalone/**/*",
@@ -44,7 +47,7 @@
     ],
     "win": {
       "target": [
-        "portable"
+        "nsis"
       ],
       "icon": "public/images/icon-512.png",
       "signAndEditExecutable": false

@@ -16,8 +16,16 @@ const isDev = !app.isPackaged;
 // ---------------------------------------------------------------------------
 function getAppRoot() {
   if (isDev) return path.join(__dirname, '..');
-  // In production without asar, files are directly in resources/app
+  // In production with asar, main.js is inside app.asar/electron/
+  // so __dirname/.. = app.asar root (for reading files like .env.local)
   return path.join(__dirname, '..');
+}
+
+function getUnpackedRoot() {
+  if (isDev) return path.join(__dirname, '..');
+  // Unpacked files live in app.asar.unpacked/ (sibling of app.asar)
+  const appRoot = path.join(__dirname, '..');
+  return appRoot.replace('app.asar', 'app.asar.unpacked');
 }
 
 function loadEnvFile() {
@@ -131,7 +139,8 @@ function createSplashWindow() {
 // Main Window
 // ---------------------------------------------------------------------------
 function createWindow() {
-  const iconPath = path.join(getAppRoot(), 'public', 'images', 'icon-512.png');
+  const unpackedRoot = getUnpackedRoot();
+  const iconPath = path.join(unpackedRoot, '.next', 'standalone', 'public', 'images', 'icon-512.png');
 
   mainWindow = new BrowserWindow({
     width: 1280,
@@ -234,9 +243,9 @@ function startNextServer() {
     }
 
     // Production: run the standalone server.js
-    // With asar, unpacked files are in app.asar.unpacked
-    const appRoot = getAppRoot();
-    const standaloneDir = path.join(appRoot, '.next', 'standalone');
+    // With asar, standalone files are unpacked to app.asar.unpacked/
+    const unpackedRoot = getUnpackedRoot();
+    const standaloneDir = path.join(unpackedRoot, '.next', 'standalone');
     const serverScript = path.join(standaloneDir, 'server.js');
 
     console.log('[WatchCrew] Starting Next.js server...');
