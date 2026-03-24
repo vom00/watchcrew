@@ -61,10 +61,19 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
 
   setProgress(seriesId: string, episode: number) {
     const { progress, episodeLogs } = get();
-    const existing = progress[seriesId];
     const now = new Date().toISOString();
 
-    if (!existing) return;
+    // Auto-create progress entry if it doesn't exist yet
+    const existing = progress[seriesId] ?? {
+      userId: '',
+      seriesId,
+      currentEpisode: 0,
+      watchStatus: 'watching' as WatchStatus,
+      startedAt: now,
+      completedAt: null,
+      lastWatchedAt: now,
+      skipFiller: false,
+    };
 
     const previousEpisode = existing.currentEpisode;
     const updatedProgress: UserProgress = {
@@ -124,10 +133,17 @@ export const useProgressStore = create<ProgressStore>((set, get) => ({
 
   setWatchStatus(seriesId: string, status: WatchStatus) {
     const { progress } = get();
-    const existing = progress[seriesId];
-    if (!existing) return;
-
     const now = new Date().toISOString();
+    const existing = progress[seriesId] ?? {
+      userId: '',
+      seriesId,
+      currentEpisode: 0,
+      watchStatus: 'plan_to_watch' as WatchStatus,
+      startedAt: now,
+      completedAt: null,
+      lastWatchedAt: now,
+      skipFiller: false,
+    };
     const updatedProgress: UserProgress = {
       ...existing,
       watchStatus: status,
