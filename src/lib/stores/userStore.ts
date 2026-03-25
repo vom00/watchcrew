@@ -17,10 +17,14 @@ interface UserStore {
   user: User | null;
   isLoggedIn: boolean;
   hydrated: boolean;
+  sessionReady: boolean;
 
   // Auth actions
   login(username: string, displayName: string, email?: string): void;
   logout(): void;
+
+  // Session
+  setSessionReady(ready: boolean): void;
 
   // Profile actions
   updateProfile(updates: Partial<User>): void;
@@ -73,6 +77,7 @@ export const useUserStore = create<UserStore>((set, get) => ({
   user: null,
   isLoggedIn: false,
   hydrated: false,
+  sessionReady: false,
 
   // ---------------------------------------------------------------------------
   // Auth
@@ -110,6 +115,10 @@ export const useUserStore = create<UserStore>((set, get) => ({
   logout() {
     persistUser(null);
     set({ user: null, isLoggedIn: false });
+  },
+
+  setSessionReady(ready: boolean) {
+    set({ sessionReady: ready });
   },
 
   // ---------------------------------------------------------------------------

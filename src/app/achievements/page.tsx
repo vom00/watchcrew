@@ -89,7 +89,7 @@ function getCategoryColor(category: AchievementCategory): string {
 
 export default function AchievementsPage() {
   const router = useRouter();
-  const { user, isLoggedIn, hydrated, loadFromStorage: loadUser } = useUserStore();
+  const { user, isLoggedIn, hydrated, sessionReady, loadFromStorage: loadUser } = useUserStore();
   const { getAllProgress, episodeLogs, loadFromStorage: loadProgress } = useProgressStore();
   const { friends, loadFromStorage: loadSocial } = useSocialStore();
 
@@ -106,10 +106,10 @@ export default function AchievementsPage() {
 
   // Redirect if not logged in
   useEffect(() => {
-    if (hydrated && !isLoggedIn) {
+    if (hydrated && sessionReady && !isLoggedIn) {
       router.push('/');
     }
-  }, [hydrated, isLoggedIn, router]);
+  }, [hydrated, sessionReady, isLoggedIn, router]);
 
   // ---------------------------------------------------------------------------
   // Compute unlocked achievements

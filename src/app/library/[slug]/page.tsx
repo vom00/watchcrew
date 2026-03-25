@@ -78,6 +78,7 @@ export default function SeriesDetailPage() {
     user,
     isLoggedIn,
     hydrated,
+    sessionReady,
     addXP,
     incrementEpisodesWatched,
     incrementSeriesCompleted,
@@ -99,10 +100,10 @@ export default function SeriesDetailPage() {
 
   // Redirect if not logged in
   useEffect(() => {
-    if (hydrated && !isLoggedIn) {
+    if (hydrated && sessionReady && !isLoggedIn) {
       router.push('/');
     }
-  }, [hydrated, isLoggedIn, router]);
+  }, [hydrated, sessionReady, isLoggedIn, router]);
 
   // ---------------------------------------------------------------------------
   // Resolve series & progress

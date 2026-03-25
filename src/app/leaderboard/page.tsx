@@ -104,7 +104,7 @@ const TABS: TabConfig[] = [
 
 export default function LeaderboardPage() {
   const router = useRouter();
-  const { user, isLoggedIn, hydrated, loadFromStorage: loadUser } = useUserStore();
+  const { user, isLoggedIn, hydrated, sessionReady, loadFromStorage: loadUser } = useUserStore();
 
   const [activeTab, setActiveTab] = useState<LeaderboardTab>('global');
   const [selectedSeries, setSelectedSeries] = useState(SERIES_OPTIONS[0].id);
@@ -117,10 +117,10 @@ export default function LeaderboardPage() {
 
   // Redirect if not logged in
   useEffect(() => {
-    if (hydrated && !isLoggedIn) {
+    if (hydrated && sessionReady && !isLoggedIn) {
       router.push('/');
     }
-  }, [hydrated, isLoggedIn, router]);
+  }, [hydrated, sessionReady, isLoggedIn, router]);
 
   // ---------------------------------------------------------------------------
   // Build leaderboard with current user injected

@@ -68,7 +68,7 @@ export default function LibraryPage() {
   const router = useRouter();
   const { progress, getAllProgress, getTotalEpisodesWatched, loadFromStorage } =
     useProgressStore();
-  const { isLoggedIn, hydrated, loadFromStorage: loadUser } = useUserStore();
+  const { isLoggedIn, hydrated, sessionReady, loadFromStorage: loadUser } = useUserStore();
 
   const [activeTab, setActiveTab] = useState<FilterTab>('all');
   const [searchQuery, setSearchQuery] = useState('');
@@ -83,10 +83,10 @@ export default function LibraryPage() {
 
   // Redirect if not logged in
   useEffect(() => {
-    if (hydrated && !isLoggedIn) {
+    if (hydrated && sessionReady && !isLoggedIn) {
       router.push('/');
     }
-  }, [hydrated, isLoggedIn, router]);
+  }, [hydrated, sessionReady, isLoggedIn, router]);
 
   // ---------------------------------------------------------------------------
   // Derive the list of tracked series paired with their progress

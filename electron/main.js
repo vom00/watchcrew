@@ -8,6 +8,7 @@ const http = require('http');
 let mainWindow;
 let serverProcess;
 let splashWindow;
+let updateWindow;
 const PORT = 3000;
 const isDev = !app.isPackaged;
 
@@ -339,24 +340,119 @@ app.whenReady().then(async () => {
           })
           .then(({ response }) => {
             if (response === 0) {
+              // Show progress window
+              updateWindow = new BrowserWindow({
+                width: 400,
+                height: 180,
+                frame: false,
+                transparent: true,
+                resizable: false,
+                alwaysOnTop: true,
+                parent: mainWindow,
+                modal: true,
+                webPreferences: {
+                  nodeIntegration: false,
+                  contextIsolation: true,
+                },
+              });
+
+              updateWindow.loadURL(`data:text/html;charset=utf-8,${encodeURIComponent(`
+                <!DOCTYPE html>
+                <html>
+                <head>
+                  <style>
+                    * { margin: 0; padding: 0; box-sizing: border-box; }
+                    body {
+                      display: flex;
+                      flex-direction: column;
+                      align-items: center;
+                      justify-content: center;
+                      height: 100vh;
+                      background: #0C0C14;
+                      border-radius: 16px;
+                      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+                      color: #ECEEF5;
+                      overflow: hidden;
+                      border: 1px solid rgba(255,255,255,0.06);
+                      padding: 24px;
+                    }
+                    .title {
+                      font-size: 16px;
+                      font-weight: 600;
+                      margin-bottom: 6px;
+                      color: #00F0FF;
+                    }
+                    .status {
+                      font-size: 12px;
+                      color: #9899A8;
+                      margin-bottom: 16px;
+                    }
+                    .progress-track {
+                      width: 100%;
+                      height: 6px;
+                      background: rgba(255,255,255,0.06);
+                      border-radius: 6px;
+                      overflow: hidden;
+                      margin-bottom: 10px;
+                    }
+                    .progress-bar {
+                      height: 100%;
+                      background: linear-gradient(90deg, #00F0FF, #8B5CF6);
+                      border-radius: 6px;
+                      width: 0%;
+                      transition: width 0.3s ease;
+                    }
+                    .percent {
+                      font-size: 13px;
+                      font-weight: 600;
+                      color: #ECEEF5;
+                      font-variant-numeric: tabular-nums;
+                    }
+                  </style>
+                </head>
+                <body>
+                  <div class="title">Updating WatchCrew</div>
+                  <div class="status" id="status">Downloading update...</div>
+                  <div class="progress-track">
+                    <div class="progress-bar" id="bar"></div>
+                  </div>
+                  <div class="percent" id="percent">0%</div>
+                </body>
+                </html>
+              `)}`);
+
               autoUpdater.downloadUpdate();
             }
           });
       });
 
+      autoUpdater.on('download-progress', (progress) => {
+        const percent = Math.round(progress.percent);
+        if (updateWindow && !updateWindow.isDestroyed()) {
+          updateWindow.webContents.executeJavaScript(`
+            document.getElementById('bar').style.width = '${percent}%';
+            document.getElementById('percent').textContent = '${percent}%';
+            document.getElementById('status').textContent = 'Downloading update... (${Math.round(progress.transferred / 1024 / 1024)}MB / ${Math.round(progress.total / 1024 / 1024)}MB)';
+          `).catch(() => {});
+        }
+      });
+
       autoUpdater.on('update-downloaded', () => {
+        if (updateWindow && !updateWindow.isDestroyed()) {
+          updateWindow.close();
+          updateWindow = null;
+        }
+
         dialog
           .showMessageBox(mainWindow, {
             type: 'info',
             title: 'Update Ready',
             message: 'Update downloaded. WatchCrew will restart to install it.',
-            buttons: ['Restart Now', 'Later'],
+            buttons: ['Restart Now'],
             defaultId: 0,
           })
-          .then(({ response }) => {
-            if (response === 0) {
-              autoUpdater.quitAndInstall();
-            }
+          .then(() => {
+            autoUpdater.quitAndInstall();
           });
       });
     }

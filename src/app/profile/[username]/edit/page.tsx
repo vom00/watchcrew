@@ -46,6 +46,7 @@ export default function ProfileEditPage() {
   const user = useUserStore((s) => s.user);
   const isLoggedIn = useUserStore((s) => s.isLoggedIn);
   const hydrated = useUserStore((s) => s.hydrated);
+  const sessionReady = useUserStore((s) => s.sessionReady);
   const updateProfile = useUserStore((s) => s.updateProfile);
   const loadUser = useUserStore((s) => s.loadFromStorage);
 
@@ -77,10 +78,10 @@ export default function ProfileEditPage() {
   // ---------------------------------------------------------------------------
 
   useEffect(() => {
-    if (hydrated && !isLoggedIn) {
+    if (hydrated && sessionReady && !isLoggedIn) {
       router.push('/');
     }
-  }, [hydrated, isLoggedIn, router]);
+  }, [hydrated, sessionReady, isLoggedIn, router]);
 
   // ---------------------------------------------------------------------------
   // Populate form from user

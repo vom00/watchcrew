@@ -113,6 +113,7 @@ export default function FriendsPage() {
   const user = useUserStore((s) => s.user);
   const isLoggedIn = useUserStore((s) => s.isLoggedIn);
   const hydrated = useUserStore((s) => s.hydrated);
+  const sessionReady = useUserStore((s) => s.sessionReady);
   const loadUser = useUserStore((s) => s.loadFromStorage);
   const friends = useSocialStore((s) => s.friends);
   const sendFriendRequest = useSocialStore((s) => s.sendFriendRequest);
@@ -131,10 +132,10 @@ export default function FriendsPage() {
 
   // Redirect if not logged in
   useEffect(() => {
-    if (hydrated && !isLoggedIn) {
+    if (hydrated && sessionReady && !isLoggedIn) {
       router.push('/');
     }
-  }, [hydrated, isLoggedIn, router]);
+  }, [hydrated, sessionReady, isLoggedIn, router]);
 
   // No demo data seeding — start clean for new users
 

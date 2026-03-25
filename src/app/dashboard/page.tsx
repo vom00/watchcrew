@@ -201,6 +201,7 @@ export default function DashboardPage() {
     user,
     isLoggedIn,
     hydrated,
+    sessionReady,
     loadFromStorage: loadUser,
     incrementEpisodesWatched,
     addXP,
@@ -234,10 +235,10 @@ export default function DashboardPage() {
   // No demo data seeding — start clean for new users
 
   useEffect(() => {
-    if (hydrated && !isLoggedIn) {
+    if (hydrated && sessionReady && !isLoggedIn) {
       router.push('/');
     }
-  }, [hydrated, isLoggedIn, router]);
+  }, [hydrated, sessionReady, isLoggedIn, router]);
 
   if (!hydrated || !isLoggedIn || !user) return null;
 

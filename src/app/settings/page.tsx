@@ -88,6 +88,7 @@ export default function SettingsPage() {
   const user = useUserStore((s) => s.user);
   const isLoggedIn = useUserStore((s) => s.isLoggedIn);
   const hydrated = useUserStore((s) => s.hydrated);
+  const sessionReady = useUserStore((s) => s.sessionReady);
   const updateProfile = useUserStore((s) => s.updateProfile);
   const loadUser = useUserStore((s) => s.loadFromStorage);
   const logout = useUserStore((s) => s.logout);
@@ -150,10 +151,10 @@ export default function SettingsPage() {
   // ---------------------------------------------------------------------------
 
   useEffect(() => {
-    if (hydrated && !isLoggedIn) {
+    if (hydrated && sessionReady && !isLoggedIn) {
       router.push('/');
     }
-  }, [hydrated, isLoggedIn, router]);
+  }, [hydrated, sessionReady, isLoggedIn, router]);
 
   // ---------------------------------------------------------------------------
   // Username change handler
@@ -910,6 +911,11 @@ export default function SettingsPage() {
               Save Changes
             </button>
           </div>
+
+          {/* Version */}
+          <p className="text-center text-xs text-[#9899A8]/50 pb-6">
+            WatchCrew v1.7.0
+          </p>
 
         </div>
       </div>

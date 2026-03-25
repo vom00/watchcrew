@@ -6,9 +6,11 @@ import { useUserStore } from '@/lib/stores';
 
 function AuthBridge({ children }: { children: React.ReactNode }) {
   const { data: session, status } = useSession();
-  const { isLoggedIn, login } = useUserStore();
+  const { isLoggedIn, login, setSessionReady } = useUserStore();
 
   useEffect(() => {
+    if (status === 'loading') return; // Still checking session
+
     // When NextAuth session exists but Zustand store doesn't have the user,
     // bridge the session into the Zustand store (handles Google/GitHub OAuth)
     if (status === 'authenticated' && session?.user && !isLoggedIn) {
@@ -17,7 +19,10 @@ function AuthBridge({ children }: { children: React.ReactNode }) {
       const username = name.toLowerCase().replace(/[^a-z0-9_]/g, '');
       login(username, name, email);
     }
-  }, [status, session, isLoggedIn, login]);
+
+    // Mark session check as complete so protected pages can safely redirect
+    setSessionReady(true);
+  }, [status, session, isLoggedIn, login, setSessionReady]);
 
   return <>{children}</>;
 }
