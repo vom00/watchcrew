@@ -320,18 +320,21 @@ export default function SettingsPage() {
     }
   };
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // Signal AuthBridge to stop re-logging in
+    window.dispatchEvent(new Event('watchcrew:logout'));
+    // Clear NextAuth session first (so AuthBridge doesn't re-login)
+    await signOut({ redirect: false }).catch(() => {});
+    // Then clear Zustand store
     logout();
-    signOut({ callbackUrl: '/' }).catch(() => {
-      router.push('/');
-    });
+    router.push('/');
   };
 
-  const handleDeleteAccount = () => {
+  const handleDeleteAccount = async () => {
+    window.dispatchEvent(new Event('watchcrew:logout'));
+    await signOut({ redirect: false }).catch(() => {});
     logout();
-    signOut({ callbackUrl: '/' }).catch(() => {
-      router.push('/');
-    });
+    router.push('/');
   };
 
   // ---------------------------------------------------------------------------
@@ -914,7 +917,7 @@ export default function SettingsPage() {
 
           {/* Version */}
           <p className="text-center text-xs text-[#9899A8]/50 pb-6">
-            WatchCrew v1.7.0
+            WatchCrew v1.7.1
           </p>
 
         </div>
